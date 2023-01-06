@@ -1,0 +1,29 @@
+name: SSH multithread action (sshugger).
+description: Execute shell script via multithread in a list of VPS servers.
+
+inputs:
+  vps_list_file:
+    description: Path to a JSON file containing a list of VPS servers.
+    required: true
+  deploy_command:
+    description: Command or file path to run to deploy the software update.
+    required: true
+  ssh_key:
+    description: SSH key to use for authentication.
+    required: false
+  username:
+    description: Username to use for authentication.
+    required: true
+outputs:
+  deployment_output:
+    description: Output from the deployment command.
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    USERNAME: ${{ inputs.username }}
+    SSH_KEY: ${{ inputs.ssh_key }}
+    VPS_LIST_FILE: ${{ inputs.vps_list_file }}
+    DEPLOY_COMMAND: ${{ inputs.deploy_command }}
+
