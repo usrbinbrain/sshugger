@@ -116,8 +116,26 @@ A `vps_list.json` is a JSON file that contains a list of dictionaries, each dict
 
 - [x] paramiko module
 
+## Action diagram:
 
-### Author: G. A. Gama (g8gama@pm.me)
+The following diagram illustrates the execution flow of the code for a GitHub action entrypoint. It includes contexts for password and SSH key authentication and has a single end point where the result can be either authentication error or success in executing commands. Password authentication is only attempted if the SSH key is not passed. The code uses thread decorators to ensure that threads are run concurrently.
+
+```mermaid
+
+graph LR
+A[main] -- Load VPS list --> B(VPS list loaded)
+A -- Load SSH key --> C(SSH key loaded)
+A -- Load deploy command --> D(Deploy command loaded)
+B -- Set VPS connection --> E((VPS connection set))
+C -- Try to authenticate with SSH key --> F(SSH auth and VPSs loaded)
+E -- Try to authenticate with password --> F(SSH auth and VPSs loaded)
+F --> D(Deploy command loaded)
+D -- Execute command on VPSs --> G((Threads started))
+G -- Print result or exception --> H[End]
+
+```
+
+#### Author: G. A. Gama (g8gama@pm.me)
 
 ---
 
